@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>十和放課後子ども教室 ― R7年度のあゆみ（時系列ふりかえり）</title>
+  <style>
+    :root {
+      --primary: #3d7a5e;
+      --primary-light: #e8f5ee;
+      --accent: #e07b39;
+      --accent-light: #fff3ec;
+      --warn: #c0392b;
+      --warn-light: #fdecea;
+      --note: #2471a3;
+      --note-light: #eaf4fb;
+      --gray: #555;
+      --gray-light: #f5f5f5;
+      --border: #ddd;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: #fafaf9;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.04em; }
+    header p { font-size: 0.85rem; opacity: 0.85; margin-top: 0.4rem; }
+
+    .switch {
+      display: flex; gap: 0.5rem; justify-content: center;
+      margin-top: 1rem; flex-wrap: wrap;
+    }
+    .switch a {
+      font-size: 0.8rem; font-weight: 700; text-decoration: none;
+      padding: 0.35rem 0.9rem; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.6); color: white;
+    }
+    .switch a.active { background: white; color: var(--primary); border-color: white; }
+
+    nav {
+      background: white; border-bottom: 2px solid var(--primary);
+      position: sticky; top: 0; z-index: 100;
+      overflow-x: auto; white-space: nowrap; padding: 0.6rem 1rem;
+    }
+    nav a {
+      display: inline-block; margin: 0 0.25rem; padding: 0.3rem 0.75rem;
+      border-radius: 999px; background: var(--primary-light); color: var(--primary);
+      text-decoration: none; font-size: 0.82rem; font-weight: 600;
+    }
+    nav a:hover { background: var(--primary); color: white; }
+
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+    .intro {
+      background: var(--accent-light); border-left: 5px solid var(--accent);
+      border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 1.2rem;
+    }
+    .intro h2 { font-size: 1rem; color: #7d4010; margin-bottom: 0.4rem; }
+    .intro p { font-size: 0.875rem; color: #5a3010; }
+    .intro .tag {
+      display: inline-block; background: var(--accent); color: white;
+      font-size: 0.72rem; font-weight: 700; border-radius: 4px;
+      padding: 0.1rem 0.5rem; margin-bottom: 0.5rem;
+    }
+
+    /* 資料の在りか案内 */
+    .sources-note {
+      background: var(--note-light); border-left: 5px solid var(--note);
+      border-radius: 8px; padding: 0.85rem 1.1rem; margin-bottom: 2rem;
+      font-size: 0.82rem; color: var(--note);
+    }
+    .sources-note strong { display: block; margin-bottom: 0.25rem; }
+    .sources-note a { color: var(--note); }
+
+    /* 年間ひと目マップ（横スクロール） */
+    .overview { margin-bottom: 2.2rem; }
+    .overview h2 {
+      font-size: 1.05rem; color: var(--primary); font-weight: 700;
+      border-left: 5px solid var(--primary); padding-left: 0.7rem; margin-bottom: 0.3rem;
+    }
+    .overview .hint { font-size: 0.76rem; color: #999; margin-bottom: 0.7rem; }
+    .ov-wrap {
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity; padding-bottom: 0.6rem;
+    }
+    .ov-track {
+      display: flex; gap: 0.7rem; min-width: max-content;
+      position: relative; padding: 0 0.5rem;
+    }
+    .ov-track::before {
+      content: ""; position: absolute; left: 1.2rem; right: 1.2rem;
+      top: 1.95rem; height: 2px; background: var(--primary); z-index: 1;
+    }
+    .ov-card {
+      flex: 0 0 130px; text-decoration: none; color: inherit;
+      scroll-snap-align: start; display: block;
+    }
+    .ov-node { height: 2rem; position: relative; text-align: center; }
+    .ov-m {
+      font-weight: 700; color: var(--primary); font-size: 0.92rem;
+      background: #fafaf9; padding: 0 0.3rem; position: relative; z-index: 2;
+    }
+    .ov-node::after {
+      content: ""; width: 11px; height: 11px; border-radius: 50%;
+      background: var(--primary); position: absolute;
+      bottom: -4px; left: 50%; transform: translateX(-50%); z-index: 2;
+      box-shadow: 0 0 0 3px #fafaf9;
+    }
+    .ov-box {
+      margin-top: 0.7rem; background: white; border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.6rem 0.55rem; min-height: 5.2rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .ov-card:hover .ov-box { border-color: var(--primary); box-shadow: 0 2px 8px rgba(61,122,94,0.15); }
+    .ov-box .ov-h { font-weight: 700; font-size: 0.84rem; display: block; margin-bottom: 0.2rem; }
+    .ov-box .ov-s { font-size: 0.72rem; color: var(--gray); line-height: 1.5; }
+
+    /* タイムライン */
+    .timeline { position: relative; padding-left: 2.4rem; }
+    .timeline::before {
+      content: ""; position: absolute; left: 0.85rem; top: 0.5rem; bottom: 0.5rem;
+      width: 2px; background: var(--border);
+    }
+    .month-block { position: relative; margin-bottom: 2.2rem; }
+    .month-dot {
+      position: absolute; left: -2.4rem; top: 0; width: 1.8rem; height: 1.8rem;
+      border-radius: 50%; background: var(--primary); color: white;
+      font-size: 0.72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 4px #fafaf9;
+    }
+    .month-title {
+      font-size: 1.05rem; color: var(--primary); font-weight: 700;
+      margin-bottom: 0.7rem; padding-top: 0.1rem;
+    }
+    .month-title span { font-size: 0.8rem; color: var(--gray); font-weight: 500; }
+
+    .event {
+      background: white; border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.9rem 1.1rem; margin-bottom: 0.7rem;
+    }
+    .event .date { font-size: 0.72rem; font-weight: 700; color: var(--accent); letter-spacing: 0.03em; }
+    .event .head { font-weight: 700; font-size: 0.95rem; margin: 0.15rem 0 0.4rem; }
+    .event .body { font-size: 0.85rem; color: var(--gray); }
+    .event .body + .body { margin-top: 0.3rem; }
+
+    .box {
+      border-radius: 8px; padding: 0.6rem 0.9rem; margin-top: 0.55rem; font-size: 0.8rem;
+    }
+    .box strong { display: block; margin-bottom: 0.15rem; }
+    .box.note { background: var(--note-light); border-left: 4px solid var(--note); color: var(--note); }
+    .box.tip  { background: var(--accent-light); border-left: 4px solid var(--accent); color: #7d4010; }
+    .box.warn { background: var(--warn-light); border-left: 4px solid var(--warn); color: var(--warn); }
+
+    /* 参照元（出典） */
+    .src {
+      font-size: 0.76rem; color: #6b8f7d; margin-top: 0.55rem;
+      background: var(--primary-light); border-radius: 6px; padding: 0.4rem 0.6rem;
+    }
+    .src::before { content: "📎 参照元　"; font-weight: 700; }
+    .src .f { color: var(--primary); font-weight: 700; }
+
+    .topics { margin-top: 2.5rem; }
+    .topics h2 {
+      font-size: 1.05rem; color: var(--primary); font-weight: 700;
+      border-left: 5px solid var(--primary); padding-left: 0.7rem; margin-bottom: 1rem;
+    }
+    .topic-card {
+      background: white; border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.9rem 1.1rem; margin-bottom: 0.7rem;
+    }
+    .topic-card .t-head { font-weight: 700; font-size: 0.92rem; margin-bottom: 0.3rem; }
+    .topic-card p { font-size: 0.84rem; color: var(--gray); }
+
+    footer {
+      text-align: center; padding: 1.5rem; font-size: 0.75rem; color: #aaa;
+      border-top: 1px solid var(--border); margin-top: 3rem;
+    }
+    a.link { color: var(--note); }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.15rem; }
+      .timeline { padding-left: 2rem; }
+      .month-dot { left: -2rem; width: 1.6rem; height: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌿 十和放課後子ども教室</h1>
+  <p>R7年度のあゆみ ― いつ・何があったか（時系列ふりかえり）</p>
+  <div class="switch">
+    <a href="index.html">📘 年間業務まとめ（何をするか）</a>
+    <a href="R7年度のあゆみ.html" class="active">🕓 今年度のあゆみ（実録）</a>
+  </div>
+</header>
+
+<nav>
+  <a href="#apr">4月</a>
+  <a href="#jul">6〜7月</a>
+  <a href="#summer">夏休み</a>
+  <a href="#oct">10月</a>
+  <a href="#nov">11月</a>
+  <a href="#dec">12月</a>
+  <a href="#feb">2月</a>
+  <a href="#mar">3月</a>
+  <a href="#topics">通年テーマ</a>
+</nav>
+
+<main>
+
+  <div class="intro">
+    <span class="tag">この年のキーワード</span>
+    <h2>R7年度は「統合 初年度」だった</h2>
+    <p>十川＋昭和の放課後子ども教室が、令和7年度の入学式から <strong>十和小学校に統合</strong>。受け入れは1〜6年生、指導員は1日4名体制に増員。部屋は授業期で <strong>1〜3年生＝多目的室／4〜6年生＝図工室</strong>。新体制ゆえの調整（部屋・予算・備品・ルール）が一年を通して続いた年でした。来年度はこの「整った土台」の上からスタートできます。</p>
+  </div>
+
+  <div class="sources-note">
+    <strong>📎 参照元データについて</strong>
+    各項目の末尾に「参照元（フォルダ名 ＞ ファイル名）」を記載しています。元データは下のボタンから引継ぎフォルダを開き、その名前のフォルダ・ファイルを探してください。
+    <div style="margin-top:0.7rem;">
+      <a href="https://drive.google.com/drive/folders/1-39VETKNmfl3ZeDfSIzWCS38zrLskP0u?usp=sharing" target="_blank" rel="noopener"
+         style="display:inline-block; background:var(--note); color:white; font-weight:700; text-decoration:none; padding:0.5rem 1.1rem; border-radius:999px; font-size:0.85rem;">📂 引継ぎフォルダ「放課後子ども教室」を開く</a>
+    </div>
+  </div>
+
+  <!-- ===== 年間ひと目マップ ===== -->
+  <section class="overview">
+    <h2>📅 年間ひと目マップ</h2>
+    <p class="hint">まず1年の流れをざっと。気になる時期のカードをタップすると、下の詳しい記録へ移動します。（横にスクロール →）</p>
+    <div class="ov-wrap">
+      <div class="ov-track">
+        <a class="ov-card" href="#apr">
+          <div class="ov-node"><span class="ov-m">4月</span></div>
+          <div class="ov-box"><span class="ov-h">統合スタート</span><span class="ov-s">新体制・名簿づくり・ソフト部の論点化</span></div>
+        </a>
+        <a class="ov-card" href="#jul">
+          <div class="ov-node"><span class="ov-m">7月</span></div>
+          <div class="ov-box"><span class="ov-h">夏休み準備</span><span class="ov-s">2回のアンケート→説明会・安全＆"定義"共有</span></div>
+        </a>
+        <a class="ov-card" href="#summer">
+          <div class="ov-node"><span class="ov-m">夏</span></div>
+          <div class="ov-box"><span class="ov-h">夏休み運営</span><span class="ov-s">川・公園への外出、図工室も併用</span></div>
+        </a>
+        <a class="ov-card" href="#oct">
+          <div class="ov-node"><span class="ov-m">10月</span></div>
+          <div class="ov-box"><span class="ov-h">冬の始動</span><span class="ov-s">冬休み前MTG①</span></div>
+        </a>
+        <a class="ov-card" href="#nov">
+          <div class="ov-node"><span class="ov-m">11月</span></div>
+          <div class="ov-box"><span class="ov-h">ルール着地</span><span class="ov-s">ソフト部の新ルールへ移行</span></div>
+        </a>
+        <a class="ov-card" href="#dec">
+          <div class="ov-node"><span class="ov-m">12月</span></div>
+          <div class="ov-box"><span class="ov-h">冬休み前 全体会</span><span class="ov-s">MTG②・緊急時の備え</span></div>
+        </a>
+        <a class="ov-card" href="#feb">
+          <div class="ov-node"><span class="ov-m">2月</span></div>
+          <div class="ov-box"><span class="ov-h">翌年度の準備</span><span class="ov-s">総会・新1年生案内・印刷依頼</span></div>
+        </a>
+        <a class="ov-card" href="#mar">
+          <div class="ov-node"><span class="ov-m">3月</span></div>
+          <div class="ov-box"><span class="ov-h">年度締め</span><span class="ov-s">保険・図書館・春休み</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="timeline">
+
+    <!-- ===== 4月 ===== -->
+    <div class="month-block" id="apr">
+      <div class="month-dot">4月</div>
+      <div class="month-title">新年度・統合スタート</div>
+
+      <div class="event">
+        <div class="head">🏫 統合した新体制で始動</div>
+        <div class="body">入学式から十和小としての統合運営がスタート。校長・教頭への挨拶、保護者グループLINEでの役員挨拶＆書類共有（規約・安全管理員シフト表）など、立ち上げの動きから。</div>
+        <div class="src"><span class="f">規約</span>＞十和放課後子ども教室規約070201.pdf／<span class="f">進行表</span>＞R7年度放課後子ども教室進行／<span class="f">冬休み放課後子ども教室＞前年度議事録とアンケート</span>＞冬休み前運営会議議事録.pdf（統合の経緯）</div>
+      </div>
+
+      <div class="event">
+        <div class="date">4/16〜</div>
+        <div class="head">⚾ ソフトボール部の「下校後のグラウンド使用」が論点に</div>
+        <div class="body">下校時間の後のグラウンド活用について、当初の運用（旧ルール）でスタート。ここから保護者の意見も交えて検討が始まり、最終的に11月に新ルールへ着地します。</div>
+        <div class="box note"><strong>つながり</strong>このテーマは「通年テーマ」にも整理しています。経緯を追うなら下までジャンプ。</div>
+        <div class="src"><span class="f">ソフトボール部について</span>＞【旧ルール】2025 4 16→11 6：…下校時間の後の活用について／保護者からの意見</div>
+      </div>
+
+      <div class="event">
+        <div class="date">4/17</div>
+        <div class="head">📝 保護者フルネーム一覧を作成・整備</div>
+        <div class="body">名簿類・出席簿（児童／管理員）を1年分まとめて準備。連絡は紙配布ではなくグループLINE中心の体制。</div>
+        <div class="src"><span class="f">名簿</span>＞2025 4 17現在放課後子ども教室保護者フルネーム一覧（スプレッドシート）／【R7年度】十和小学校全校児童名簿.jpg</div>
+      </div>
+
+      <div class="event">
+        <div class="date">4/22</div>
+        <div class="head">🍬 遠足のおやつのやり取り禁止を周知</div>
+        <div class="body">アレルギー等への配慮から、遠足時のおやつの交換禁止を保護者へ案内。</div>
+        <div class="src"><span class="f">おやつ</span>＞2025 4 22遠足のおやつのやり取り禁止について</div>
+      </div>
+    </div>
+
+    <!-- ===== 6〜7月 ===== -->
+    <div class="month-block" id="jul">
+      <div class="month-dot">7月</div>
+      <div class="month-title">夏休みに向けた準備と意見交換 <span>（6月下旬〜7月）</span></div>
+
+      <div class="event">
+        <div class="date">6/27〜28</div>
+        <div class="head">📋 第1回アンケート＋夏休み前 説明会・意見交換会の案内</div>
+        <div class="body">保護者の不安・要望をすくい上げるアンケートを実施し、説明会開催を案内。回答は7/2にカテゴリ分け、7/17に「課題への回答」としてまとめる、という丁寧な流れを踏んだ。</div>
+        <div class="src"><span class="f">夏休み前会ご案内・アンケート結果</span>＞R7年度夏休み前十和放課後子ども教室意見交換会・説明会の開催について／【共有】【R7年度】…第1回アンケート(回答)（スプレッドシート）／【回答：ドキュメント・カテゴリ分け】…／【最新】【課題に対する回答】…</div>
+      </div>
+
+      <div class="event">
+        <div class="date">7/17</div>
+        <div class="head">🤝 役員＋高橋管理員で夏休み前MTG</div>
+        <div class="body">アンケートで出た課題をもとに、管理員と直接すり合わせ。現場と役員の認識合わせの場。</div>
+        <div class="src"><span class="f">高橋指導員とのMTG</span>＞2025 7 17(木)役員と高橋さんとで夏休み前MTG</div>
+      </div>
+
+      <div class="event">
+        <div class="date">7/18</div>
+        <div class="head">🍱 第2回アンケート（夏休みの利用予定）</div>
+        <div class="body"><strong>あったかふれあいセンター</strong>による「<strong>あったかごはん</strong>」期間〜夏休み（7/28〜8/31）の利用予定を再調査。あったかごはんは毎年この時期に実施され、その期間は利用が増えるため毎年の調整が要る。利用増が見込まれたため、<strong>多目的室に加えて図工室も使う</strong>運用に。授業期と同様、1〜3年＝多目的室／4〜6年＝図工室。</div>
+        <div class="box tip"><strong>毎年の調整ポイント</strong>あったかごはんの実施期間をあったかふれあいセンター・管理員と確認し、利用予定アンケート→部屋の確保（図工室併用）→受け入れ体制、までを段取りしておく。</div>
+        <div class="src"><span class="f">夏休み前会ご案内・アンケート結果</span>＞【第2回】R7夏休み利用予定アンケート内容(高橋管理員より).pdf</div>
+      </div>
+
+      <div class="event">
+        <div class="date">7/18 / 7/25</div>
+        <div class="head">🥵 熱中症＆アレルギー対策、教室の「定義」を共有</div>
+        <div class="body">7/18に対策資料を作成し、7/25に「熱中症＆アレルギー＆放課後子ども教室の定義について」を開催。暑さ・アレルギー対応と、"放課後子ども教室とは何か（学童との違い・退室の扱い）"を改めて全体で確認した。</div>
+        <div class="box tip"><strong>ここが効いた</strong>「退室＝学童退室、その後は教室の責任外。出る／帰る／外に遊びに行く を声かけする」という定義の共有は、トラブル予防の土台。毎年最初に確認すると安心。</div>
+        <div class="src"><span class="f">熱中症＆アレルギー対策</span>＞熱中症＆アレルギー対策.docx／.pdf／7 25開催 熱中症＆アレルギー＆放課後子ども教室の定義について</div>
+      </div>
+
+      <div class="event">
+        <div class="head">🏖️ お盆休みの確認と文書配布</div>
+        <div class="body">管理員と休業日をすり合わせて文書化・配布。</div>
+        <div class="src"><span class="f">進行表</span>＞R7年度放課後子ども教室進行（年間の流れ）</div>
+      </div>
+    </div>
+
+    <!-- ===== 夏休み ===== -->
+    <div class="month-block" id="summer">
+      <div class="month-dot">夏</div>
+      <div class="month-title">夏休み期間の運営</div>
+      <div class="event">
+        <div class="head">🌊 川・こいのぼり公園などへの外出</div>
+        <div class="body">長期休みは一日中校内で過ごすより楽しめるように、管理員の提案で天候・人数を見ながら外出も実施（前年度からの流れ）。あったかごはん期間は図工室も併用して受け入れ。</div>
+        <div class="src"><span class="f">冬休み放課後子ども教室＞前年度議事録とアンケート</span>＞冬休み前運営会議議事録.pdf（管理員提案・アンケート①の経緯）</div>
+      </div>
+    </div>
+
+    <!-- ===== 10月 ===== -->
+    <div class="month-block" id="oct">
+      <div class="month-dot">10月</div>
+      <div class="month-title">冬休みに向けて始動</div>
+      <div class="event">
+        <div class="date">10/20</div>
+        <div class="head">❄️ 冬休み前MTG（1回目）</div>
+        <div class="body">早めに冬休みの段取りを相談。12月の全体会・お便りに向けた助走。</div>
+        <div class="src"><span class="f">冬休み放課後子ども教室</span>＞2025 10 20：冬休み前のMTG</div>
+      </div>
+    </div>
+
+    <!-- ===== 11月 ===== -->
+    <div class="month-block" id="nov">
+      <div class="month-dot">11月</div>
+      <div class="month-title">ルールの着地・冬休み案内</div>
+      <div class="event">
+        <div class="date">11/6</div>
+        <div class="head">⚾ ソフトボール部のグラウンド使用が「新ルール」に</div>
+        <div class="body">4月から検討してきた下校後のグラウンド使用について、新ルールに移行して一区切り。半年がかりで保護者・現場の声を反映した形。</div>
+        <div class="src"><span class="f">ソフトボール部について</span>＞【新ルール】ソフトボール部員のグラウンド使用等について／【旧ルール】2025 4 16→11 6：…</div>
+      </div>
+      <div class="event">
+        <div class="head">📨 冬休みの会のお知らせ</div>
+        <div class="body">12月の冬休み前の会に向けて、保護者・管理員へ案内を出す。</div>
+        <div class="src"><span class="f">冬休み放課後子ども教室</span>＞【R7年度】冬休みの子ども教室について</div>
+      </div>
+    </div>
+
+    <!-- ===== 12月 ===== -->
+    <div class="month-block" id="dec">
+      <div class="month-dot">12月</div>
+      <div class="month-title">冬休み前 運営全体会</div>
+      <div class="event">
+        <div class="date">12/10</div>
+        <div class="head">🤝 冬休み前MTG（2回目）＋資料整理</div>
+        <div class="body">高橋管理員と冬休みの詳細をすり合わせ。あわせて「学童と子ども教室の違い」「令和7年度 管理員名簿」を整理し、共通理解をそろえた。</div>
+        <div class="src"><span class="f">冬休み放課後子ども教室</span>＞2025 12 10冬休み前MTG／<span class="f">学童と子ども教室の違い</span>＞放課後子ども教室の運営内容について.docx・令和7年度の管理員名簿</div>
+      </div>
+      <div class="event">
+        <div class="head">📣 冬休み前 運営全体会を開催（多目的ホール 18:15〜）</div>
+        <div class="body">議題・名簿・緊急時貼り紙をセットにした資料一式で開催。冬休みの日程・注意点を共有し、冬休みの教室について文書を配布した。</div>
+        <div class="box note"><strong>緊急時の備え</strong>火災・地震・事故それぞれの「発生時の対応」貼り紙を整備済み。教室に掲示＋データは引継ぎフォルダにあり。</div>
+        <div class="src"><span class="f">冬休み放課後子ども教室＞【R7年度】冬休み前運営全体会資料</span>＞【R7年度】放課後子ども教室 冬休み前運営委員会議題／名簿／緊急時貼り紙／<span class="f">緊急時用貼り紙</span>＞火災・地震・事故 発生時の対応（十和）.pdf</div>
+      </div>
+    </div>
+
+    <!-- ===== 2月 ===== -->
+    <div class="month-block" id="feb">
+      <div class="month-dot">2月</div>
+      <div class="month-title">翌年度の準備・総会</div>
+      <div class="event">
+        <div class="head">📣 全体会（規約の説明 〜 1年間の流れ）</div>
+        <div class="body">規約をあらためて説明し、年間の流れを共有する場を開催。新年度の役員・保護者の見通しづくり。</div>
+        <div class="src"><span class="f">全体会(学期前・学期末運営委員会)</span>＞2月全体会開催：規約の説明から1年間の流れまで</div>
+      </div>
+      <div class="event">
+        <div class="head">✉️ 新1年生への案内状・申込書の準備</div>
+        <div class="body">体験入学に合わせて、登録申込書・児童票・新1年生案内状を準備。<strong>まず校長か教頭に次年度の人数を確認</strong>してから部数を決める。</div>
+        <div class="box warn"><strong>要チェック</strong>登録申込書と児童票で書式が違う。アレルギー欄の記載に食い違いがないか、両方必ず突き合わせる。</div>
+        <div class="src"><span class="f">(参考)R6年度データ</span>＞新一年生への案内状（スプレッドシート）／<span class="f">地域振興局でプリントサポートして頂く資料</span>＞新一年生への案内状.pdf・20240110_新規申込書(印刷注意）.pdf</div>
+      </div>
+      <div class="event">
+        <div class="date">2/16頃</div>
+        <div class="head">🖨️ 地域振興局でプリントサポート／説明会の案内</div>
+        <div class="body">説明会開催のお知らせ・新規申込書の印刷を地域振興局でサポートしてもらった。役場用の登録申込書は生涯学習担当へ印刷を依頼し、回収後に役場へ。</div>
+        <div class="src"><span class="f">地域振興局でプリントサポートして頂く資料</span>＞【大切なお知らせ】十和放課後子ども教室説明会開催について</div>
+      </div>
+    </div>
+
+    <!-- ===== 3月 ===== -->
+    <div class="month-block" id="mar">
+      <div class="month-dot">3月</div>
+      <div class="month-title">年度締め・春休みの準備</div>
+      <div class="event">
+        <div class="head">🏃 スポーツ保険の手続き<small>（副会長）</small></div>
+        <div class="body">3/7〆切の申込書をもとに加入手続き。副会長の担当業務。</div>
+        <div class="src"><span class="f">進行表</span>＞R7年度放課後子ども教室進行（3月の項）</div>
+      </div>
+      <div class="event">
+        <div class="head">📚 図書館利用申込書の配布・回収</div>
+        <div class="body">3/10配布・3/21〆切（高橋さん行き）の段取りで実施。</div>
+        <div class="src"><span class="f">進行表</span>＞R7年度放課後子ども教室進行（3月の項）</div>
+      </div>
+      <div class="event">
+        <div class="head">🌸 春休み前の全体会／春休みの日程</div>
+        <div class="body">規約上は「長休み前は全体会を開催」が原則。春休みの日程は管理員⇄学校で調整され、会長はお便りで確認すればOK。</div>
+        <div class="src"><span class="f">規約</span>＞十和放課後子ども教室規約070201.pdf／<span class="f">進行表</span>＞R7年度放課後子ども教室進行</div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+  <!-- ===== 通年テーマ ===== -->
+  <section class="topics" id="topics">
+    <h2>🧵 一年を通して動いたテーマ（来年に効く申し送り）</h2>
+
+    <div class="topic-card">
+      <div class="t-head">① 統合初年度の調整</div>
+      <p>部屋割り（1〜3年＝多目的室／4〜6年＝図工室、繁忙期は図工室も併用）、指導員4名体制、統合用予算・備品、多目的室の照明見積もりなど、新体制ならではの調整が続いた。土台は整ったので、来年度は微調整から入れる。</p>
+      <div class="src"><span class="f">冬休み放課後子ども教室＞前年度議事録とアンケート</span>＞冬休み前運営会議議事録.pdf（統合の報告）／<span class="f">学童と子ども教室の違い</span></div>
+    </div>
+
+    <div class="topic-card">
+      <div class="t-head">② ゲーム使用の在り方</div>
+      <p>四万十町内でゲーム使用を許可していたのは（統合前の）十川だけ。ルール順守・紛失/破損・統合を理由に在り方を再考した経緯あり。現状ルールを年度頭に確認しておくと混乱しない。</p>
+      <div class="src"><span class="f">冬休み放課後子ども教室＞前年度議事録とアンケート</span>＞冬休み前運営会議議事録.pdf（アンケート②ゲーム使用について）</div>
+    </div>
+
+    <div class="topic-card">
+      <div class="t-head">③ ソフトボール部のグラウンド使用</div>
+      <p>4/16の旧ルールから検討を重ね、11/6に新ルールへ。保護者の意見も記録に残っているので、再燃したら経緯資料を参照。</p>
+      <div class="src"><span class="f">ソフトボール部について</span>＞保護者からの意見／【旧ルール】2025 4 16→11 6：…／【新ルール】ソフトボール部員のグラウンド使用等について</div>
+    </div>
+
+    <div class="topic-card">
+      <div class="t-head">④ 「放課後子ども教室とは何か」の共有</div>
+      <p>学童との違い、「退室＝学童退室・その後は教室の責任外」、出る/帰る/外に遊びに行くの声かけ徹底。トラブル予防の核なので、新年度最初の会で必ず共有する。</p>
+      <div class="src"><span class="f">学童と子ども教室の違い</span>＞放課後子ども教室の運営内容について.docx／<span class="f">熱中症＆アレルギー対策</span>＞7 25開催 …の定義について／<span class="f">規約</span>＞放課後子ども教室の運営内容について.docx.pdf</div>
+    </div>
+
+    <div class="topic-card">
+      <div class="t-head">⑤ 安全（熱中症・アレルギー・緊急時）</div>
+      <p>熱中症＆アレルギー対策資料、遠足のおやつ交換禁止、火災/地震/事故の対応貼り紙が整備済み。夏前に資料を更新・再共有するのが恒例化できると良い。</p>
+      <div class="src"><span class="f">熱中症＆アレルギー対策</span>＞熱中症＆アレルギー対策.pdf／<span class="f">おやつ</span>＞2025 4 22遠足のおやつのやり取り禁止について／<span class="f">緊急時用貼り紙</span>＞火災・地震・事故 発生時の対応（十和）.pdf</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  十和放課後子ども教室 保護者会 ― R7年度ふりかえり（引継ぎ用・随時更新）<br>
+  ※日付・参照元は引継ぎフォルダ「放課後子ども教室」内の資料名に基づく。詳細は各資料を参照してください。<br>
+  🔗 公開URL：<a href="https://tetiteti36-wq.github.io/towa-houkago-hikitsugi/" style="color:#3d7a5e;">tetiteti36-wq.github.io/towa-houkago-hikitsugi</a>
+</footer>
+
+</body>
+</html>

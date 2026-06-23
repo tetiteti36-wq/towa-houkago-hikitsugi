@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>十和放課後子ども教室 引継ぎガイド</title>
+  <style>
+    :root {
+      --primary: #3d7a5e;
+      --primary-light: #e8f5ee;
+      --accent: #e07b39;
+      --accent-light: #fff3ec;
+      --warn: #c0392b;
+      --warn-light: #fdecea;
+      --note: #2471a3;
+      --note-light: #eaf4fb;
+      --gray: #555;
+      --gray-light: #f5f5f5;
+      --border: #ddd;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      background: #fafaf9;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    /* ヘッダー */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    header p {
+      font-size: 0.875rem;
+      opacity: 0.85;
+      margin-top: 0.4rem;
+    }
+    .switch {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .switch a {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.6);
+      color: white;
+    }
+    .switch a.active { background: white; color: var(--primary); border-color: white; }
+
+    /* ナビ（月ジャンプ） */
+    nav {
+      background: white;
+      border-bottom: 2px solid var(--primary);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0.6rem 1rem;
+    }
+    nav a {
+      display: inline-block;
+      margin: 0 0.3rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    nav a:hover { background: var(--primary); color: white; }
+
+    /* メインレイアウト */
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem;
+    }
+
+    /* 年間ひと目マップ（横スクロール） */
+    .overview { margin-bottom: 1rem; }
+    .overview h2 {
+      font-size: 1.05rem; color: var(--primary); font-weight: 700;
+      border-left: 5px solid var(--primary); padding-left: 0.7rem; margin-bottom: 0.3rem;
+    }
+    .overview .hint { font-size: 0.76rem; color: #999; margin-bottom: 0.7rem; }
+    .ov-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+      padding-bottom: 0.6rem;
+    }
+    .ov-track {
+      display: flex;
+      gap: 0.7rem;
+      min-width: max-content;
+      position: relative;
+      padding: 0 0.5rem;
+    }
+    .ov-track::before {
+      content: "";
+      position: absolute;
+      left: 1.2rem; right: 1.2rem;
+      top: 1.95rem;
+      height: 2px;
+      background: var(--primary);
+      z-index: 1;
+    }
+    .ov-card {
+      flex: 0 0 140px;
+      text-decoration: none;
+      color: inherit;
+      scroll-snap-align: start;
+      display: block;
+    }
+    .ov-node { height: 2rem; position: relative; text-align: center; }
+    .ov-m {
+      font-weight: 700; color: var(--primary); font-size: 0.9rem;
+      background: #fafaf9; padding: 0 0.3rem; position: relative; z-index: 2;
+    }
+    .ov-node::after {
+      content: ""; width: 11px; height: 11px; border-radius: 50%;
+      background: var(--primary); position: absolute;
+      bottom: -4px; left: 50%; transform: translateX(-50%); z-index: 2;
+      box-shadow: 0 0 0 3px #fafaf9;
+    }
+    .ov-box {
+      margin-top: 0.7rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.55rem;
+      min-height: 5.2rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .ov-card:hover .ov-box { border-color: var(--primary); box-shadow: 0 2px 8px rgba(61,122,94,0.15); }
+    .ov-box .ov-h { font-weight: 700; font-size: 0.84rem; display: block; margin-bottom: 0.2rem; }
+    .ov-box .ov-s { font-size: 0.72rem; color: var(--gray); line-height: 1.5; }
+
+    /* 月セクション */
+    .month-section {
+      margin-top: 2.5rem;
+    }
+    .month-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-left: 5px solid var(--primary);
+      padding-left: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .month-badge {
+      background: var(--primary);
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 0.2rem 0.7rem;
+      white-space: nowrap;
+    }
+    .month-header h2 {
+      font-size: 1.1rem;
+      color: var(--primary);
+    }
+
+    /* タスクカード */
+    .task-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.8rem;
+    }
+    .task-card .task-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .task-card .task-title .icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .task-card p, .task-card ul {
+      font-size: 0.875rem;
+      color: var(--gray);
+      margin-top: 0.3rem;
+    }
+    .task-card ul {
+      padding-left: 1.2rem;
+    }
+    .task-card ul li {
+      margin-bottom: 0.2rem;
+    }
+
+    /* 担当バッジ */
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 0.1rem 0.45rem;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .badge-chair { background: var(--primary-light); color: var(--primary); }
+    .badge-vice { background: var(--accent-light); color: var(--accent); }
+    .badge-school { background: #eee; color: #666; }
+
+    /* 注意書きボックス */
+    .note-box {
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+    }
+    .note-box.warn {
+      background: var(--warn-light);
+      border-left: 4px solid var(--warn);
+      color: var(--warn);
+    }
+    .note-box.info {
+      background: var(--note-light);
+      border-left: 4px solid var(--note);
+      color: var(--note);
+    }
+    .note-box.tip {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      color: #7d4010;
+    }
+    .note-box strong { display: block; margin-bottom: 0.2rem; }
+
+    /* 資料の在りか案内 */
+    .sources-note {
+      background: var(--note-light); border-left: 5px solid var(--note);
+      border-radius: 8px; padding: 0.85rem 1.1rem; margin-bottom: 1.5rem;
+      font-size: 0.82rem; color: var(--note);
+    }
+    .sources-note strong { display: block; margin-bottom: 0.25rem; }
+    .sources-note a { color: var(--note); }
+
+    /* 参照元（出典） */
+    .src {
+      font-size: 0.76rem; color: #6b8f7d; margin-top: 0.4rem;
+      background: var(--primary-light); border-radius: 6px; padding: 0.45rem 0.7rem;
+    }
+    .src::before { content: "📎 参照元　"; font-weight: 700; }
+    .src .f { color: var(--primary); font-weight: 700; }
+
+    /* フッター */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.75rem;
+      color: #aaa;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.2rem; }
+      .month-badge { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌿 十和放課後子ども教室</h1>
+  <p>会長引継ぎガイド ― 年間業務まとめ</p>
+  <div class="switch">
+    <a href="index.html" class="active">📘 年間業務まとめ（何をするか）</a>
+    <a href="R7年度のあゆみ.html">🕓 今年度のあゆみ（実録）</a>
+  </div>
+</header>
+
+<nav>
+  <a href="#apr">4月</a>
+  <a href="#jul">7月初旬</a>
+  <a href="#nov">11月初旬</a>
+  <a href="#dec">12月初旬</a>
+  <a href="#feb">2月</a>
+  <a href="#mar">3月</a>
+</nav>
+
+<main>
+
+  <div class="sources-note">
+    <strong>📎 このページの参照元について</strong>
+    この年間業務まとめは <span style="font-weight:700;">進行表「R7年度放課後子ども教室進行」</span> と <span style="font-weight:700;">規約</span> を土台に、各月フォルダの実資料を反映しています。各月の末尾に、その月で使う具体的なデータ（フォルダ名 ＞ ファイル名）を記載しました。下のボタンから引継ぎフォルダを開いて該当ファイルを探せます。<br>
+    ※「いつ・何があったか」の実録は <a href="R7年度のあゆみ.html">🕓 今年度のあゆみ</a> を参照。
+    <div style="margin-top:0.7rem;">
+      <a href="https://drive.google.com/drive/folders/1-39VETKNmfl3ZeDfSIzWCS38zrLskP0u?usp=sharing" target="_blank" rel="noopener"
+         style="display:inline-block; background:var(--note); color:white; font-weight:700; text-decoration:none; padding:0.5rem 1.1rem; border-radius:999px; font-size:0.85rem;">📂 引継ぎフォルダ「放課後子ども教室」を開く</a>
+    </div>
+  </div>
+
+  <!-- ===== 年間ひと目マップ ===== -->
+  <section class="overview">
+    <h2>📅 年間ひと目マップ</h2>
+    <p class="hint">会長の年間業務をざっと俯瞰。気になる時期のカードをタップすると、下の詳しい説明へ移動します。（横にスクロール →）</p>
+    <div class="ov-wrap">
+      <div class="ov-track">
+        <a class="ov-card" href="#apr">
+          <div class="ov-node"><span class="ov-m">4月</span></div>
+          <div class="ov-box"><span class="ov-h">新年度スタート</span><span class="ov-s">校長へ挨拶・名簿/出席簿作成・LINEで書類共有</span></div>
+        </a>
+        <a class="ov-card" href="#jul">
+          <div class="ov-node"><span class="ov-m">7月初旬</span></div>
+          <div class="ov-box"><span class="ov-h">夏休み前の会</span><span class="ov-s">夏休み書類の配布・あったかごはん調整・お盆休み確認</span></div>
+        </a>
+        <a class="ov-card" href="#nov">
+          <div class="ov-node"><span class="ov-m">11月初旬</span></div>
+          <div class="ov-box"><span class="ov-h">冬休みの準備</span><span class="ov-s">冬休みの会のお知らせを出す</span></div>
+        </a>
+        <a class="ov-card" href="#dec">
+          <div class="ov-node"><span class="ov-m">12月初旬</span></div>
+          <div class="ov-box"><span class="ov-h">冬休みの会</span><span class="ov-s">冬休みに向けた確認・意見交換</span></div>
+        </a>
+        <a class="ov-card" href="#feb">
+          <div class="ov-node"><span class="ov-m">2月</span></div>
+          <div class="ov-box"><span class="ov-h">翌年度の準備</span><span class="ov-s">申込書配布・児童票確認・新1年生案内・保険</span></div>
+        </a>
+        <a class="ov-card" href="#mar">
+          <div class="ov-node"><span class="ov-m">3月</span></div>
+          <div class="ov-box"><span class="ov-h">年度締め・春休み</span><span class="ov-s">保険手続き・図書館申込・総会・春休み日程</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== 4月 ====== -->
+  <section class="month-section" id="apr">
+    <div class="month-header">
+      <div class="month-badge">4月</div>
+      <h2>新年度スタート</h2>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🏫</span>
+        <span>校長・教頭へ挨拶<span class="badge badge-chair">会長</span></span>
+      </div>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">💬</span>
+        <span>保護者グループLINEへ役員挨拶 &amp; 書類共有<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>役員挨拶とあわせて、以下2点を保護者グループLINEに共有する。</p>
+      <ul>
+        <li>📄 <strong>安全管理員当番予定（シフト）表</strong>　← 毎月共有する
+          <p style="margin-top:0.4rem; font-size:0.85rem; color:#555; font-weight:normal;">月1回管理員が提出するものを役員（会長に限らず）が1枚受取り、LINEで共有する。全児童への配布はしない。</p>
+          <div class="note-box info" style="margin-top:0.4rem;">
+            ℹ️ すぐーるで案内が来ない場合は、バス運行時間が書かれた学校配布プリントも一緒にLINEで送ると◎
+          </div>
+        </li>
+        <li>📜 <a href="https://drive.google.com/drive/folders/19bWPkdCXwTmJp8J_3-7KeJSAoRsyVYim?usp=sharing" target="_blank" rel="noopener"><strong>規約</strong></a></li>
+      </ul>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">📋</span>
+        <span>1年間分の出席簿・名簿を作成して渡す<span class="badge badge-chair">会長</span></span>
+      </div>
+      <ul>
+        <li>① 児童出席簿（1年間分）</li>
+        <li>② 教室利用の児童名簿</li>
+        <li>③ 管理員の出席簿（1年間分）</li>
+      </ul>
+      <div class="note-box tip">
+        💡 ①の児童出席簿は、途中入会者を想定して数行の余白を入れておくと親切。
+      </div>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">📒</span>
+        <span>全校生徒児童名簿を学校からもらっておく<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>放課後教室を利用していない児童の把握など、何かと便利な場面がある。</p>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">📝</span>
+        <span>保護者フルネーム一覧の更新<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>「放課後子ども教室保護者フルネーム一覧」の翌年度タブに、新1年生を追加しておくと便利。</p>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">📱</span>
+        <span>連絡網兼名簿の作成<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>グループLINEを活用しているため、紙の配布はしていない。</p>
+    </div>
+    <div class="src"><span class="f">進行表</span>＞R7年度放課後子ども教室進行／<span class="f">規約</span>＞十和放課後子ども教室規約070201.pdf／<span class="f">名簿</span>＞保護者フルネーム一覧・【R7年度】十和小学校全校児童名簿.jpg</div>
+  </section>
+
+
+  <!-- ====== 7月初旬 ====== -->
+  <section class="month-section" id="jul">
+    <div class="month-header">
+      <div class="month-badge">7月初旬</div>
+      <h2>夏休み前の会</h2>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">☀️</span>
+        <span>夏休み前の会を開催<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>夏休みに関する書類の作成・配布。管理員・保護者から不安や不満がないかヒアリングする機会にする。</p>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🍚</span>
+        <span>「あったかごはん」期間の調整<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p><strong>あったかふれあいセンター</strong>による「<strong>あったかごはん</strong>」が<strong>毎年この時期に実施</strong>される。期間中は教室の利用が増えるため、毎年の調整が必要。</p>
+      <ul>
+        <li>利用予定アンケートを取り、見込み人数を把握する</li>
+        <li>管理員と、使う部屋（多目的室＋必要なら図工室を併用）と受け入れ体制をすり合わせる</li>
+        <li>実施期間・段取りをあったかふれあいセンター／管理員と確認する</li>
+      </ul>
+      <div class="note-box info">
+        ℹ️ R7年度は利用増を見込み、授業期と同様「1〜3年＝多目的室／4〜6年＝図工室」で図工室も併用して対応した。
+      </div>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🏖️</span>
+        <span>お盆休みの確認と文書配布<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>管理員と確認事項をすり合わせたうえで、文書にして配布する。</p>
+    </div>
+    <div class="src"><span class="f">進行表</span>＞R7年度放課後子ども教室進行／<span class="f">夏休み前会ご案内・アンケート結果</span>（第1回・第2回アンケート、説明会案内）／<span class="f">高橋指導員とのMTG</span>＞2025 7 17 役員と高橋さんとで夏休み前MTG</div>
+  </section>
+
+
+  <!-- ====== 11月初旬 ====== -->
+  <section class="month-section" id="nov">
+    <div class="month-header">
+      <div class="month-badge">11月初旬</div>
+      <h2>冬休みの準備</h2>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">❄️</span>
+        <span>冬休みの会のお知らせを出す<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>12月の冬休み前の会に向けて、保護者・管理員への案内をする。</p>
+    </div>
+    <div class="src"><span class="f">進行表</span>＞R7年度放課後子ども教室進行／<span class="f">冬休み放課後子ども教室</span>＞【R7年度】冬休みの子ども教室について</div>
+  </section>
+
+
+  <!-- ====== 12月初旬 ====== -->
+  <section class="month-section" id="dec">
+    <div class="month-header">
+      <div class="month-badge">12月初旬</div>
+      <h2>冬休みの会</h2>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🎄</span>
+        <span>冬休みの会を開催<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>夏休み前の会と同様に、冬休みに向けた確認と意見交換を行う。</p>
+    </div>
+    <div class="src"><span class="f">冬休み放課後子ども教室＞【R7年度】冬休み前運営全体会資料</span>（議題・名簿・緊急時貼り紙）／2025 10 20・2025 12 10 冬休み前MTG／<span class="f">緊急時用貼り紙</span>＞火災・地震・事故 発生時の対応（十和）.pdf</div>
+  </section>
+
+
+  <!-- ====== 2月 ====== -->
+  <section class="month-section" id="feb">
+    <div class="month-header">
+      <div class="month-badge">2月</div>
+      <h2>翌年度の準備</h2>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🏫</span>
+        <span>体験入学に合わせた申込書配布<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>翌年度の学童申込用紙を全校児童分用意する。<strong>まず校長か教頭に次年度の人数を確認</strong>すること。</p>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">📄</span>
+        <span>登録申込書（役場用）の印刷依頼<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>生涯学習担当の西内さんに「児童登録申込書のコピー ○部印刷してください」と依頼する。<br>回収後、役場へ渡す。</p>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🩺</span>
+        <span>児童票（放課後子ども教室用）の確認<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>アレルギーや帰り方（保護者迎えまで待機するか等）など、必ず目を通す。</p>
+      <div class="note-box warn">
+        ⚠️ 登録申込書と児童票で書式が異なるが、<strong>アレルギー欄の記載に食い違いがないよう</strong>両方確認すること。
+      </div>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">✉️</span>
+        <span>新1年生への案内状<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>登録申込書・児童票と一緒に新1年生の家庭へ配布する。</p>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🏃</span>
+        <span>スポーツ保険の処理<span class="badge badge-vice">副会長</span></span>
+      </div>
+      <p>副会長の担当業務。</p>
+    </div>
+    <div class="src"><span class="f">進行表</span>＞R7年度放課後子ども教室進行／<span class="f">地域振興局でプリントサポートして頂く資料</span>（説明会案内・新規申込書・新一年生案内状）／<span class="f">(参考)R6年度データ</span>＞新一年生への案内状</div>
+  </section>
+
+
+  <!-- ====== 3月 ====== -->
+  <section class="month-section" id="mar">
+    <div class="month-header">
+      <div class="month-badge">3月</div>
+      <h2>年度締め・春休みの準備</h2>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🌸</span>
+        <span>春休みの日程確認<span class="badge badge-school">管理員&学校</span></span>
+      </div>
+      <p>管理員が学校とスケジュールをやり取りして春休みの日程を決定する。会長はお便りで確認するだけでOK（ノータッチ）。</p>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">🏃</span>
+        <span>スポーツ保険の加入手続き<span class="badge badge-vice">副会長</span></span>
+      </div>
+      <p>3/7〆切の申込書をもとに加入手続きを行う。副会長の担当。</p>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">📚</span>
+        <span>図書館利用申込書の配布・回収<span class="badge badge-chair">会長</span></span>
+      </div>
+      <ul>
+        <li>3/10 に配布</li>
+        <li>3/21 〆切で高橋さん行き</li>
+      </ul>
+      <div class="note-box info">
+        ℹ️ 現在、高橋さんと調整中。
+      </div>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">
+        <span class="icon">📣</span>
+        <span>春休み前の全体会（総会）の開催<span class="badge badge-chair">会長</span></span>
+      </div>
+      <p>コロナ禍以降は役員のみでの開催が続いたが、<strong>規約の原則は「長休み前は開催する」</strong>となっている。</p>
+      <div class="note-box tip">
+        💡 春休みが3/24頃なら、その前に実施する。
+      </div>
+    </div>
+    <div class="src"><span class="f">進行表</span>＞R7年度放課後子ども教室進行（3月の項）／<span class="f">規約</span>＞十和放課後子ども教室規約070201.pdf</div>
+  </section>
+
+</main>
+
+<footer>
+  十和放課後子ども教室 保護者会 — 引継ぎ用資料（随時更新）<br>
+  🔗 公開URL：<a href="https://tetiteti36-wq.github.io/towa-houkago-hikitsugi/" style="color:#3d7a5e;">tetiteti36-wq.github.io/towa-houkago-hikitsugi</a>
+</footer>
+
+</body>
+</html>
